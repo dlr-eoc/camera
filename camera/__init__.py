@@ -80,7 +80,13 @@ class Camera(object):
         self.S = mat
         self.Si = np.linalg.inv(self.S)
         
-        
+    def position(self):
+        """
+           :return: the position of the camera in world coordinates 
+           :rtype: 3D numpy Array 
+        """
+        return self.S[0:3,[3]]
+            
     #def transform(self):
     #    self.S = self.cosymat.dot(self.R_boresight).dot(self.T_boresight).dot(self.R_gimbal).dot(self.T_gimbal).dot(self.R_uav).dot(self.T_uav)
     #    self.Si = self.Ti_uav.dot(self.Ri_uav).dot(self.Ti_gimbal).dot(self.Ri_gimbal).dot(self.Ti_boresight).dot(self.Ri_boresight).dot(self.cosymat.T)
@@ -168,6 +174,35 @@ class Camera(object):
             pass
         elif self.distortionmodel == CamModel.LUT:
             pass
+    
+    def reprojectToPlane(self,x,distance):
+        """
+          this is a wrapper for reproject() to get real world coordinates instead of a direction vector.
+          the direction vector of reproject() intersects a virtual plane with the given distance.
+          the plane lies in front of the camera and parallel to its focal plane array.
+          the intersection point will be returned. 
+                   
+           :param x: a numpy 2D-Point (x,y) coordinates of an image 
+           :param distance: the distance of the parallel virual intersection plane
+           :type x: 2D numpy array [[x],[y]] (in pixel coordinates)
+           :type distance: float (in world coordinates e.g. in meter)
+           :return: the reprojected Point in 3D world coordinates. returns [[None],[None],[None]] 
+                   if no intersection or plane is not in front of the camera.
+           :rtype: 3D numpy Array [[X][Y][Z]] (in world coordinates)
+        """
+        if self.distortionmodel == CamModel.NOCAM:
+            raise("Error- with NOCAM this method doeas not work!")
+        rp = self.reproject(x)
+        raydir = rp[0:3] - self.position()
+        n_plane = np.array([0,0,-1])
+        plane = n_plane * (- distance)
+        rd_n = np.dot(raydir.ravel(), n_plane)
+        if rd_n >= 0.0:
+            return np.array([[None],[None],[None]])
+        pd = np.dot(plane, n_plane)
+        p0_n = np.dot(self.position().ravel(), n_plane)
+        t = (pd - p0_n) / rd_n
+        return self.position() + (raydir * t)
            
 #
 # BROWN
