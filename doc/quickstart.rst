@@ -16,24 +16,19 @@ This projects the Point P(1,0,10) on to the camera image plane. We call the proj
     import camera
     
     P = np.array([[1],[0],[10],[1]])   
-    mycam = camera.Camera()
-    mycam.intrinsics(640,512,1000,320,260)
+    cam = camera.Camera()
+    cam.intrinsics(640,512,1000,320,260)
+    cam.attitudeMat(np.eye(4))
     p = cam.project(P)
 
 and to reproject it back to the 3D world we use this code ::    
 
-    Q = cam.reproject(p) 
+    Q = cam.reprojectToPlane(p,distance=10) 
     
+if this easy reprojection does not fit your needs, you can use reproject(p) which returns a direction vector
+and write your own reprojection wrapper.   
+
 .. note::
 
-    This is a note box
-    
-.. warning:: and this is in the first line
-    
-    This is a warning box
-    
-.. Tip:: This is a greeen Tip Box
-    bla bla bla:: 
-    
-        bla.open("mystr",12.4)
-        
+    reprojectToPlane return a 3D Vector [[X][Y][Z]
+            
