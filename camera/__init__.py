@@ -85,7 +85,7 @@ class Camera(object):
            :return: the position of the camera in world coordinates 
            :rtype: 3D numpy Array 
         """
-        return self.S[0:3,[3]]
+        return self.S[0:3,[3]].ravel()
             
     #def transform(self):
     #    self.S = self.cosymat.dot(self.R_boresight).dot(self.T_boresight).dot(self.R_gimbal).dot(self.T_gimbal).dot(self.R_uav).dot(self.T_uav)
@@ -142,33 +142,34 @@ class Camera(object):
         returns a 2d point on the imageplane
         (except for NOCAM: then its just a 3d-ray )
         """
-        #print ("distmodel:", self.distortionmodel)
-        #print (self.K,self.P,self.S,X)
+        if X.shape in [(4,1),(3,1)]: #converts column vector to flat row vector 
+            X = np.ravel(X)
+        if X.shape[-1] == 3: # appends homogenious elements, if input is just 3D world coordinates
+            X = np.append(X,np.ones((X.shape[0],1)),1)
         if self.distortionmodel == CamModel.NOCAM:
-            x = self.S.dot(X)
-            return x 
+            x = self.S.dot(X.T)
+            return x.T 
         if self.distortionmodel == CamModel.PINHOLE:
-            x = self.P.dot(self.K).dot(self.S).dot(X)
+            x = self.P.dot(self.K).dot(self.S).dot(X.T)
             x_norm = x/x[3]
-            #print ("x:",x, x_norm)
-            return np.array([x_norm[0]/x_norm[2],x_norm[1]/x_norm[2]])
+            return np.array([x_norm[0]/x_norm[2],x_norm[1]/x_norm[2]]).T
         elif self.distortionmodel == CamModel.BROWN:
             pass
         elif self.distortionmodel == CamModel.LUT:
             pass
     
-    def reproject(self,X,distance=1):
+    def reproject(self,x,distance=1):
         """
         reprojects a pixel to a 3d-ray
         """
+        xt = x.T    
         if self.distortionmodel == CamModel.NOCAM:
-            Xi = self.Si.dot(X)
-            return Xi 
-            
+            Xi = self.Si.dot(xt)
+            return Xi.T 
         elif self.distortionmodel == CamModel.PINHOLE:
-            X3d = np.array([X[0],X[1],np.ones_like(X[0]),np.ones_like(X[0])])
+            X3d = np.array([xt[0],xt[1],np.ones_like(xt[0]),np.ones_like(xt[0])])
             Xi = self.Si.dot(self.__Kinv__()).dot(self.Pi).dot(X3d)
-            return Xi/Xi[3]
+            return (Xi/Xi[3]).T
             
         elif self.distortionmodel == CamModel.BROWN:
             pass
@@ -193,16 +194,15 @@ class Camera(object):
         if self.distortionmodel == CamModel.NOCAM:
             raise("Error- with NOCAM this method doeas not work!")
         rp = self.reproject(x)
-        raydir = rp[0:3] - self.position()
+        raydir = np.add(rp.T[0:3].T, - self.position()).T
         n_plane = np.array([0,0,-1])
         plane = n_plane * (- distance)
-        rd_n = np.dot(raydir.ravel(), n_plane)
-        if rd_n >= 0.0:
-            return np.array([[None],[None],[None]])
+        rd_n = np.dot(raydir.T, n_plane)
         pd = np.dot(plane, n_plane)
-        p0_n = np.dot(self.position().ravel(), n_plane)
-        t = (pd - p0_n) / rd_n
-        return self.position() + (raydir * t)
+        p0_n = np.dot(self.position(), n_plane)
+        t = (pd - p0_n) / np.ma.masked_where(rd_n >= 0, rd_n)
+        return np.add(self.position(), (raydir * t).T)
+        
            
 #
 # BROWN
