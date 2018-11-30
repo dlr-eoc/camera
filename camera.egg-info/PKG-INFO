@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: camera
+Version: 0.31
+Summary: a camera projection lib to calculate the ray direction of a pixel and vice versa
+Home-page: UNKNOWN
+Author: Martin Israel
+Author-email: martin.israel@dlr.de
+License: MIT license
+Description: UNKNOWN
+Keywords: camera pin hole projection brown lut
+Platform: UNKNOWN

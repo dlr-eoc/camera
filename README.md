@@ -21,6 +21,7 @@ To install system-wide from source distribution:
 Documentation
 -------------
 
+* documentation can be found at https://martin-israel.de/doc/camera
 * If you acquired this code via GitHub, then you can build the documentation using sphinx.
       From the documentation directory, run:
           `$ make html`

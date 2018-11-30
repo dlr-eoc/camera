@@ -1,0 +1,646 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>camera &mdash; camera 0.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../camera.html" class="icon icon-home"> camera
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extrinsics.html">Extrinsic Orientation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../camera.html">camera</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../camera.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>camera</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for camera</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.31&quot;</span>
+
+<span class="k">def</span> <span class="nf">homo</span><span class="p">(</span><span class="n">mat3d</span><span class="p">):</span>
+    <span class="n">mat4d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">mat3d</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">mat4d</span><span class="p">,[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">]]))</span>
+
+<span class="k">def</span> <span class="nf">projective2euklidean</span><span class="p">(</span><span class="n">xh</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">xh</span> <span class="o">/</span> <span class="n">xh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+<span class="k">def</span> <span class="nf">euklidean2projective</span><span class="p">(</span><span class="n">xe</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">xe</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">xe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))</span>
+        
+ 
+<div class="viewcode-block" id="CamModel"><a class="viewcode-back" href="../api/cammodel.html#camera.CamModel">[docs]</a><span class="k">class</span> <span class="nc">CamModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">NOCAM</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    when there is no camera, then this is not a central projection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">PINHOLE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    the idealized camera is a pinhole camera. Here no distortion occurs. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">BROWN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    a real camera has distortions that can be described by some radial and tangential distortion parameters. </span>
+<span class="sd">    Duane C. Brown has introduced this very popular camera model. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LUT</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    if brown&#39;s camera model is not fitting good enough, the lookuptable could do the job. Every sharp pixel projects </span>
+<span class="sd">    rays just from one direction. the ray direction can be described with x and y angles to the optical axis.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    
+<div class="viewcode-block" id="Camera"><a class="viewcode-back" href="../api/camera.html#camera.Camera">[docs]</a><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    this class provides methods to calculate the projection of a point of interest (poi) from the scene onto the image plane and reverse (reprojection). </span>
+<span class="sd">    </span>
+<span class="sd">    If you have a camera and you know a scene objects world position coordinates and the cameras position and viewing angles, </span>
+<span class="sd">    then with this tool you can calculate the scene object&#39;s pixelposition on your image plane.</span>
+<span class="sd">    Okay, this is maybe a special case and not so often used, but the reverse projection from the image to the world coordinates you might find useful.</span>
+<span class="sd">    But this is a bit tricky, because reprojection needs additional information about the depth.</span>
+<span class="sd">    </span>
+<span class="sd">    I needed this kind of image reprojection for detecting and rescueing roe deer fawns in meadows from beeing killed by mowing machines. </span>
+<span class="sd">    A UAV mounted thermal camera captured images. The fawns are hot spots with just few pixel size.  </span>
+<span class="sd">    </span>
+<span class="sd">    this lets you get a world map position of a point of interest on your image. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># transformationsmatrix</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        standalone means the camera is not mounted on a uav. </span>
+<span class="sd">        the coordinate system is then the camera coordinate system (x points right, y points down on the image and z points to the scene)</span>
+<span class="sd">        if standalone is false we assume that the camera is mounted on a uav</span>
+<span class="sd">        and the coordinate system is the uav-coordinate system (the geocoordinate system / left handed, see pose for more details)</span>
+<span class="sd">                 </span>
+<span class="sd">            </span>
+<span class="sd">               _z  right handed camera cosy  </span>
+<span class="sd">               /|</span>
+<span class="sd">              /______\ x        </span>
+<span class="sd">             |   ____/____          </span>
+<span class="sd">            \|/ |         |</span>
+<span class="sd">              y |   Image | </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">=</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">NOCAM</span>
+        
+    
+<div class="viewcode-block" id="Camera.attitudeMat"><a class="viewcode-back" href="../api/camera.html#camera.Camera.attitudeMat">[docs]</a>    <span class="k">def</span> <span class="nf">attitudeMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mat</span><span class="p">):</span><span class="c1">#yaw,pitch,roll):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            defines the outer orientation of the camera.  </span>
+<span class="sd">                   </span>
+<span class="sd">           :param mat: affine transformation matrix</span>
+<span class="sd">           :type mat: numpy array with shape (4, 4)</span>
+<span class="sd">           :rtype: void</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">=</span> <span class="n">mat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="Camera.position"><a class="viewcode-back" href="../api/camera.html#camera.Camera.position">[docs]</a>    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">           :return: the position of the camera in world coordinates </span>
+<span class="sd">           :rtype: 3D numpy Array </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,[</span><span class="mi">3</span><span class="p">]]</span></div>
+            
+    <span class="c1">#def transform(self):</span>
+    <span class="c1">#    self.S = self.cosymat.dot(self.R_boresight).dot(self.T_boresight).dot(self.R_gimbal).dot(self.T_gimbal).dot(self.R_uav).dot(self.T_uav)</span>
+    <span class="c1">#    self.Si = self.Ti_uav.dot(self.Ri_uav).dot(self.Ti_gimbal).dot(self.Ri_gimbal).dot(self.Ti_boresight).dot(self.Ri_boresight).dot(self.cosymat.T)</span>
+    
+<div class="viewcode-block" id="Camera.intrinsics"><a class="viewcode-back" href="../api/camera.html#camera.Camera.intrinsics">[docs]</a>    <span class="k">def</span> <span class="nf">intrinsics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">width</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="n">fx</span><span class="p">,</span><span class="n">cx</span><span class="p">,</span><span class="n">cy</span><span class="p">,</span><span class="n">ar</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">skew</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            defines the inner orientation of the camera.  </span>
+<span class="sd">                   </span>
+<span class="sd">           :param width: image width</span>
+<span class="sd">           :param height: image height</span>
+<span class="sd">           :param fx: focal length in pixel units (size: dx)</span>
+<span class="sd">           :param cx: optical center (x component)</span>
+<span class="sd">           :param cy: optical center (y component)</span>
+<span class="sd">           :param ar: aspect ratio. fy = fx * ar </span>
+<span class="sd">           :param skew: shear coefficient between x and y. </span>
+<span class="sd">           :type width: int</span>
+<span class="sd">           :type height: int</span>
+<span class="sd">           :type fx: float</span>
+<span class="sd">           :type cx: float</span>
+<span class="sd">           :type cy: float</span>
+<span class="sd">           :type ar: float</span>
+<span class="sd">           :type skew: float</span>
+<span class="sd">           :rtype: void</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fx</span> <span class="o">=</span> <span class="n">fx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ar</span> <span class="o">=</span> <span class="n">ar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fy</span> <span class="o">=</span> <span class="n">ar</span><span class="o">*</span><span class="n">fx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cx</span> <span class="o">=</span> <span class="n">cx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cy</span> <span class="o">=</span> <span class="n">cy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skew</span> <span class="o">=</span> <span class="n">skew</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">fx</span><span class="p">,</span><span class="n">skew</span><span class="p">,</span><span class="n">cx</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fy</span><span class="p">,</span><span class="n">cy</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">imgwidth</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imgheight</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">=</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">PINHOLE</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">NOCAM</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span></div>
+    
+    <span class="k">def</span> <span class="nf">__Kinv__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :rtype: the inverse of the matrix K. shape: (4,4) </span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">,</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">skew</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fy</span><span class="p">),</span>
+                <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fy</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">skew</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cy</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fy</span><span class="p">),</span><span class="mi">0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">fy</span><span class="p">,</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cy</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>    
+    
+
+        
+<div class="viewcode-block" id="Camera.project"><a class="viewcode-back" href="../api/camera.html#camera.Camera.project">[docs]</a>    <span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        projects a world 3d-point on the camera plane</span>
+<span class="sd">        returns a 2d point on the imageplane</span>
+<span class="sd">        (except for NOCAM: then its just a 3d-ray )</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#print (&quot;distmodel:&quot;, self.distortionmodel)</span>
+        <span class="c1">#print (self.K,self.P,self.S,X)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">NOCAM</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span> 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">PINHOLE</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">x_norm</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="c1">#print (&quot;x:&quot;,x, x_norm)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_norm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">x_norm</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">x_norm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">x_norm</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">BROWN</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">LUT</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+    
+<div class="viewcode-block" id="Camera.reproject"><a class="viewcode-back" href="../api/camera.html#camera.Camera.reproject">[docs]</a>    <span class="k">def</span> <span class="nf">reproject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">distance</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        reprojects a pixel to a 3d-ray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">NOCAM</span><span class="p">:</span>
+            <span class="n">Xi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Si</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Xi</span> 
+            
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">PINHOLE</span><span class="p">:</span>
+            <span class="n">X3d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+            <span class="n">Xi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Si</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__Kinv__</span><span class="p">())</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Pi</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X3d</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Xi</span><span class="o">/</span><span class="n">Xi</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">BROWN</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">LUT</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+    
+<div class="viewcode-block" id="Camera.reprojectToPlane"><a class="viewcode-back" href="../api/camera.html#camera.Camera.reprojectToPlane">[docs]</a>    <span class="k">def</span> <span class="nf">reprojectToPlane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">distance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">          this is a wrapper for reproject() to get real world coordinates instead of a direction vector.</span>
+<span class="sd">          the direction vector of reproject() intersects a virtual plane with the given distance.</span>
+<span class="sd">          the plane lies in front of the camera and parallel to its focal plane array.</span>
+<span class="sd">          the intersection point will be returned. </span>
+<span class="sd">                   </span>
+<span class="sd">           :param x: a numpy 2D-Point (x,y) coordinates of an image </span>
+<span class="sd">           :param distance: the distance of the parallel virual intersection plane</span>
+<span class="sd">           :type x: 2D numpy array [[x],[y]] (in pixel coordinates)</span>
+<span class="sd">           :type distance: float (in world coordinates e.g. in meter)</span>
+<span class="sd">           :return: the reprojected Point in 3D world coordinates. returns [[None],[None],[None]] </span>
+<span class="sd">                   if no intersection or plane is not in front of the camera.</span>
+<span class="sd">           :rtype: 3D numpy Array [[X][Y][Z]] (in world coordinates)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">==</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">NOCAM</span><span class="p">:</span>
+            <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;Error- with NOCAM this method doeas not work!&quot;</span><span class="p">)</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reproject</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">raydir</span> <span class="o">=</span> <span class="n">rp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">()</span>
+        <span class="n">n_plane</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">plane</span> <span class="o">=</span> <span class="n">n_plane</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span> <span class="n">distance</span><span class="p">)</span>
+        <span class="n">rd_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">raydir</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">n_plane</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rd_n</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="kc">None</span><span class="p">],[</span><span class="kc">None</span><span class="p">],[</span><span class="kc">None</span><span class="p">]])</span>
+        <span class="n">pd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="n">n_plane</span><span class="p">)</span>
+        <span class="n">p0_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">n_plane</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span> <span class="o">-</span> <span class="n">p0_n</span><span class="p">)</span> <span class="o">/</span> <span class="n">rd_n</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">raydir</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span></div>
+           
+<span class="c1">#</span>
+<span class="c1"># BROWN</span>
+<span class="c1">#</span>
+        
+<div class="viewcode-block" id="Camera.lensdistortion"><a class="viewcode-back" href="../api/camera.html#camera.Camera.lensdistortion">[docs]</a>    <span class="k">def</span> <span class="nf">lensdistortion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">k1</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">k2</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">p1</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">p2</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">k3</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sets the radial and tangential parameters for the brown camera model. </span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="n">k1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">=</span> <span class="n">k2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k3</span> <span class="o">=</span> <span class="n">k3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distortionmodel</span> <span class="o">=</span> <span class="n">CamModel</span><span class="o">.</span><span class="n">BROWN</span></div>
+
+<div class="viewcode-block" id="Camera.brown"><a class="viewcode-back" href="../api/camera.html#camera.Camera.brown">[docs]</a>    <span class="k">def</span> <span class="nf">brown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">X</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span>  <span class="o">=</span>  <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k3</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">r</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">*</span><span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">y</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">*</span><span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="n">r</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cx</span> <span class="o">+</span> <span class="n">xi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span> <span class="o">+</span> <span class="n">yi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">skew</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cy</span> <span class="o">+</span> <span class="n">yi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fy</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">])</span><span class="c1">#.ravel()</span></div></div>
+    
+
+
+
+
+
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+<span class="c1"># usecase:</span>
+    <span class="kn">import</span> <span class="nn">transforms3d</span>
+    <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
+    
+    <span class="c1"># wichtige Erkenntnisse fuer die Eingangsparameter:</span>
+    <span class="c1"># - die vierte Koordinate von Xw muss ungleich 0 sein (wir verwenden immer 1!)</span>
+    <span class="c1"># - die Rotation und Translation der Kamera erfolgt im rechtsseitigen Koordinaten System als passive !!! Rotation und Translation</span>
+    <span class="c1">#   dies wird erreicht indem die homogene Matrix einer aktiven Rotation und Translation in der gewuenschten Richtung erzeugt wird und dann die Transponierte dieser Matrix  </span>
+    <span class="c1">#   (mat.T) an die Camera-Klasse uebergeben wird (dadurch wird aus einer aktiven Transformation eine passive).</span>
+    <span class="n">Xw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>     
+    <span class="n">rot</span> <span class="o">=</span> <span class="n">transforms3d</span><span class="o">.</span><span class="n">euler</span><span class="o">.</span><span class="n">euler2mat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">pi</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;szyx&quot;</span><span class="p">)</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">transforms3d</span><span class="o">.</span><span class="n">affines</span><span class="o">.</span><span class="n">compose</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span><span class="n">rot</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">inv</span><span class="p">)</span>
+    <span class="c1">#print(np.equal(inv,mat.T))</span>
+    <span class="n">cam</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">()</span> <span class="c1">#</span>
+    
+    <span class="n">cam</span><span class="o">.</span><span class="n">attitudeMat</span><span class="p">(</span><span class="n">inv</span><span class="p">)</span><span class="c1"># z y&#39; x&#39;&#39;</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="n">cam</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+    <span class="n">cam</span><span class="o">.</span><span class="n">intrinsics</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">320</span><span class="p">,</span><span class="mi">260</span><span class="p">)</span><span class="c1"># all in pixel coordinates</span>
+    <span class="c1">#cam.distortion(0,0,0,0)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;====================</span><span class="se">\n</span><span class="s2">Xw:&quot;</span><span class="p">,</span> <span class="n">Xw</span><span class="p">)</span>
+    <span class="n">Xc</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">Xw</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Xc:&quot;</span><span class="p">,</span> <span class="n">Xc</span><span class="p">)</span>
+    
+    <span class="c1">#Xc : [x,y]</span>
+    <span class="n">Xcr</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">reproject</span><span class="p">(</span><span class="n">Xc</span><span class="p">)</span>
+    <span class="c1"># Xcr: [x,y,z]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Xcr:&quot;</span><span class="p">,</span> <span class="n">Xcr</span><span class="p">)</span>
+    
+    
+    
+    
+    
+    
+    
+    
+    <span class="c1">#trans = Transform()</span>
+    <span class="c1">#trans.position(X, Y, Z) # orthogonal coordinates</span>
+    <span class="c1">#trans.attitude(yaw, pitch, roll, &quot;zy&#39;x&#39;&#39;&quot;)</span>
+    <span class="c1">#trans.attitudeQ(w,x,y,z)</span>
+    <span class="c1">#trans.addjoint(dx,dy,dz,&quot;roll&quot;) </span>
+    <span class="c1">#trans.pose(0,90,0,1,2,5,&quot;Euler&quot;)</span>
+    <span class="c1">#trans.boresight(10,-2,3,0,1,0,&quot;Euler&quot;) </span>
+    <span class="c1">#trans.gimbal(0,0,20,0,0,0,&quot;Euler&quot;) </span>
+    
+    <span class="c1">#cam.attitudeQ(w,x,y,z)</span>
+    <span class="c1">#cam.attitude(yaw,pitch,roll)# z y&#39; x&#39;&#39;</span>
+    
+    <span class="c1"># print(&quot;===Cam_position===&quot;)</span>
+    
+    <span class="c1"># print(cam.position())</span>
+    <span class="c1"># Xc = cam.project(Xw)</span>
+    <span class="c1"># print(&quot;Xc&quot;, Xc)</span>
+    <span class="c1"># Xcr = cam.reproject(Xc)</span>
+    <span class="c1"># print(&quot;Xcr&quot;, Xcr)</span>
+    <span class="c1"># print(Xc[0][0],Xc[1][0])</span>
+    
+    
+    
+    
+
+
+    <span class="c1"># from visual import *</span>
+    <span class="c1"># from rotation import euler,quaternions</span>
+    <span class="c1"># import numpy as np</span>
+
+
+    <span class="c1"># ax = arrow(pos=(0,0,0),axis=(0,0,-1),color=(1,0,0))</span>
+    <span class="c1"># ay = arrow(pos=(0,0,0),axis=(1,0,0),color=(0,1,0))</span>
+    <span class="c1"># az = arrow(pos=(0,0,0),axis=(0,1,0),color=(0,0,1))</span>
+
+
+    <span class="c1"># for i in range(-5,5):</span>
+        <span class="c1"># for j in range(-5,5):</span>
+            <span class="c1"># sphere(pos=(i,0,j), radius=0.02,color=(0,0,1))</span>
+            <span class="c1"># sphere(pos=(0,i,j), radius=0.02,color=(0,1,0))</span>
+        <span class="c1"># sphere(pos=(i,0,0), radius=0.05)</span>
+        <span class="c1"># sphere(pos=(0,i,0), radius=0.05)</span>
+        <span class="c1"># sphere(pos=(0,0,i), radius=0.05)</span>
+
+    <span class="c1"># def pt(pos):</span>
+        <span class="c1"># sphere(pos=(pos[1],pos[2],-pos[0]), radius=0.1)</span>
+        <span class="c1"># cylinder(pos=(0,0,0),  axis=(0,0,-pos[0]), radius=0.02,color=(1,0,0))</span>
+        <span class="c1"># cylinder(pos=(0,0,-pos[0]),  axis=(pos[1],0,0), radius=0.02,color=(0,1,0))</span>
+        <span class="c1"># cylinder(pos=(pos[1],0,-pos[0]),  axis=(0,pos[2],0), radius=0.02,color=(0,0,1))</span>
+        <span class="c1"># X3 = np.array(pos).reshape((3,1))</span>
+        <span class="c1"># return np.vstack((X3,1))</span>
+        
+    <span class="c1"># def camcosy(pos, xxx_todo_changeme):</span>
+        <span class="c1"># (roll,pitch,yaw) = xxx_todo_changeme</span>
+        <span class="c1"># left = np.array([[0,0,-1],[1,0,0],[0,1,0]])</span>
+        <span class="c1"># #right = np.array([[1,0,0],[0,-1,0],[0,0,-1]])</span>
+        <span class="c1"># R = euler.ZYXdeg(yaw,pitch,roll).T.dot(left)</span>
+        <span class="c1"># Rc = np.array([[0,1,0],[0,0,-1],[1,0,0]]).dot(R)</span>
+        <span class="c1"># #ux = arrow(pos=(pos[1],pos[2],-pos[0]),axis=R[0],color=(1,0,0))</span>
+        <span class="c1"># #uy = arrow(pos=(pos[1],pos[2],-pos[0]),axis=R[1],color=(0,1,0))</span>
+        <span class="c1"># #uz = arrow(pos=(pos[1],pos[2],-pos[0]),axis=R[2],color=(0,0,1))</span>
+        <span class="c1"># cx = arrow(pos=(pos[1],pos[2],-pos[0]),axis=0.5*Rc[0],color=(1,0,0))</span>
+        <span class="c1"># cy = arrow(pos=(pos[1],pos[2],-pos[0]),axis=0.5*Rc[1],color=(0,1,0))</span>
+        <span class="c1"># cz = arrow(pos=(pos[1],pos[2],-pos[0]),axis=0.5*Rc[2],color=(0,0,1))</span>
+
+        
+    <span class="c1"># Xw = pt((1,0.5,0))</span>
+
+    <span class="c1"># Xw2 = pt((-2,-3,0))</span>
+    
+    
+    <span class="c1"># #Xw = np.array([1,0.5,0]).reshape((3,1))#World Point (X:Hochachse,Y:Rechtsachse,Z:Elevation nach oben)</span>
+    <span class="c1"># #Xw = np.vstack((Xw,1))#make it homogenious </span>
+    <span class="c1"># print(&quot;Xw&quot;,Xw)    </span>
+    <span class="c1"># #Xw2 = np.array([-2,-3,0]).reshape((3,1))#World Point (X:Hochachse,Y:Rechtsachse,Z:Elevation nach oben)</span>
+    <span class="c1"># #Xw2 = np.vstack((Xw2,1))#make it homogenious </span>
+    <span class="c1"># print(&quot;Xw2&quot;,Xw2)    </span>
+    <span class="c1"># #cam = Camera(CoSy.UAV)#Camera schaut standardmaessig nach Norden und befindet sich im Ursprung</span>
+   <span class="c1"># # cam.pose(90,90,0,0,0,5)</span>
+   <span class="c1"># # cam.boresight(0,0,0,0,0,0)</span>
+    
+   <span class="c1"># # print &quot;uav&quot;,np.around(cam.P_uav.dot(Xw).ravel()) # im 3D-Kamerakoordinatensystem( X zeigt Richtung Vorne)</span>
+   <span class="c1"># # proj = np.around(cam.project(Xw).ravel())</span>
+   <span class="c1"># # print &quot;cam &quot;,proj</span>
+   <span class="c1"># # cam.intrinsics(640,512,1160,320,256)</span>
+    
+    <span class="c1"># #cam.distortion(0)</span>
+    <span class="c1"># #import pickle</span>
+    <span class="c1"># #lut = pickle.load(open(&quot;D:\\WILDRETTER\\tau640_pelz_2014.lut&quot;,&quot;r&quot;))</span>
+    <span class="c1"># #cam.lookuptable(lut[0],lut[1])</span>
+    <span class="c1"># #print &quot;distmodel&quot;,cam.distortionmodel</span>
+    <span class="c1"># #print &quot;Xc&quot;,cam.project(Xw)</span>
+
+    <span class="c1"># print(&quot;\nNOCAM-Example&quot;)</span>
+    <span class="c1"># cam = Camera(CoSy.UAV)#Camera schaut standardmaessig nach Norden und befindet sich im Ursprung</span>
+    <span class="c1"># #camcosy((1,2,5),(0,90,0))    </span>
+    <span class="c1"># cam.pose(0,90,0,1,2,5)</span>
+    <span class="c1"># cam.boresight(0,0,0,0,0,0) # (z&#39;&#39;/yaw,x&#39;&#39;/pitch,y&#39;&#39;/roll,X,Y,Z) rechtsseitiger drehsinn, aber bezogen auf kamerakoordinaten</span>
+    <span class="c1"># cam.gimbal()</span>
+    <span class="c1"># cam.transform()</span>
+   <span class="c1"># # print &quot;=======Transforms======&quot;</span>
+    <span class="c1"># #print &quot;cosymat&quot;,cam.cosymat</span>
+    <span class="c1"># #print &quot;R_bs&quot;,  cam.R_boresight</span>
+    <span class="c1"># #print &quot;T_bs&quot;,  cam.T_boresight</span>
+    <span class="c1"># #print &quot;R_gi&quot;,  cam.R_gimbal</span>
+    <span class="c1"># #print &quot;T_gi&quot;,  cam.T_gimbal</span>
+    <span class="c1"># #print &quot;R_uav&quot;, cam.R_uav</span>
+    <span class="c1"># #print &quot;T_uav&quot;, cam.T_uav</span>
+    <span class="c1"># #print &quot;Ri_uav&quot;, cam.Ri_uav</span>
+    <span class="c1"># #print &quot;Ti_uav&quot;, cam.Ti_uav</span>
+    <span class="c1"># #print &quot;S&quot;, cam.S</span>
+    <span class="c1"># #print &quot;Si&quot;, cam.Si</span>
+    <span class="c1"># print(&quot;===Cam_position===&quot;)</span>
+    <span class="c1"># print(cam.position())</span>
+    <span class="c1"># Xc = cam.project(Xw)</span>
+    <span class="c1"># print(&quot;Xc&quot;, Xc)</span>
+    <span class="c1"># Xcr = cam.reproject(Xc)</span>
+    <span class="c1"># print(&quot;Xcr&quot;, Xcr)</span>
+    <span class="c1"># print(Xc[0][0],Xc[1][0])</span>
+    <span class="c1"># #P = cam.poi(Xc[0][0],Xc[1][0],0)</span>
+    <span class="c1"># #print &quot;Poi&quot;,P</span>
+    
+    <span class="c1"># #cylinder(pos=(2,5,-1),  axis=(10*Xcr[0],10*Xcr[2],10*Xcr[1]), radius=0.02,color=(1,0,0))</span>
+        
+    
+    <span class="c1"># Xc2 = cam.project(Xw2)</span>
+    <span class="c1"># print(&quot;Xc2&quot;, Xc2)</span>
+    
+    <span class="c1"># #print &quot;ALT:&quot;</span>
+    <span class="c1"># #cam.boresight_alt(0,0,0,0,0,0) # (z&#39;&#39;/yaw,x&#39;&#39;/pitch,y&#39;&#39;/roll,X,Y,Z) rechtsseitiger drehsinn, aber bezogen auf kamerakoordinaten</span>
+    <span class="c1"># #Xc = cam.project_alt(Xw)</span>
+   <span class="c1"># # print &quot;P:&quot;,cam.P_cam</span>
+    <span class="c1"># #print &quot;Xc&quot;, Xc</span>
+    <span class="c1"># #Xc2 = cam.project_alt(Xw2)</span>
+    <span class="c1"># #print &quot;Xc2&quot;, Xc2</span>
+    
+    
+   <span class="c1"># # Xrepro = cam.reproject(Xc,5)</span>
+   <span class="c1"># # print &quot;Xrepro&quot;,Xrepro</span>
+    
+    <span class="c1"># print(&quot;\nPINHOLE-Example&quot;)</span>
+    <span class="c1"># cam = Camera()</span>
+    <span class="c1"># camcosy((1,2,5),(0,90,0))    </span>
+    <span class="c1"># cam.pose(0,90,0,1,2,5)</span>
+    <span class="c1"># cam.boresight(4,10,3,1,0,0)</span>
+    <span class="c1"># cam.intrinsics(640,512,1160,320,256)</span>
+    <span class="c1"># cam.gimbal()</span>
+    <span class="c1"># cam.transform()</span>
+    <span class="c1"># Xc = cam.project(Xw)</span>
+    <span class="c1"># print(&quot;Xc&quot;,Xc)</span>
+    <span class="c1"># Xrepro = cam.reproject(Xc,5)#,cam.fx)</span>
+    <span class="c1"># print(&quot;Xrepro&quot;, Xrepro)</span>
+    <span class="c1"># P = cam.poi(Xc[0][0],Xc[1][0],0)</span>
+    <span class="c1"># print(&quot;Poi&quot;,P)</span>
+   
+            
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Martin Israel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'0.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

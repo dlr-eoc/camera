@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; camera 0.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Start" href="quickstart.html" />
+    <link rel="prev" title="Welcome to camera’s documentation!" href="camera.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="camera.html" class="icon icon-home"> camera
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-the-python-camera-module">What is the python camera module?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-camera-geometry">The camera geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-pinhole-camera-model">The pinhole camera model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#brown-s-camera-model">Brown’s Camera Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extrinsics.html">Extrinsic Orientation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="camera.html">camera</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="camera.html">Docs</a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-is-the-python-camera-module">
+<h2>What is the python camera module?<a class="headerlink" href="#what-is-the-python-camera-module" title="Permalink to this headline">¶</a></h2>
+<p>camera is a python module that provides functionality for projection
+from a 3D-scene to the 2D image plane of a camera. It also provides functionality
+for the reprojection from the 2d image plane to the scene in the 3D world coordinates.
+It is commonly required in engineering and science applications for georeferencing images.</p>
+</div>
+<div class="section" id="how-it-works">
+<h2>How it works?<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-camera-geometry">
+<h3>The camera geometry<a class="headerlink" href="#the-camera-geometry" title="Permalink to this headline">¶</a></h3>
+<p>Lets say, you take a photo of a scene with your camera. Your camera has a lens and a focal plane array (and a lot of other stuff we don’t care about).
+<a class="reference internal" href="#camera-example"><span class="std std-numref">Fig. 1</span></a> shows how a real world point P(X,Y,Z) is being projected through the center of the lens on to the image pixel coordinates (u,v) of the camera’s focal plane array.
+The optical axis pierces the center of the lens and hits the focal plane in the principle point (cx,cy).</p>
+<p>The image on the focal plane array is upside down. This leads to the fact that the axes of the image coordinates (u,v) point always in the reverse direction of the world (respectively the camera) coordinates.</p>
+<div class="figure align-center" id="id1">
+<span id="camera-example"></span><img alt="_images/pinhole_camera2.png" src="_images/pinhole_camera2.png" />
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">the projection through a camera</span></p>
+</div>
+<p>To get not that confused with the orientation, the computer vision people always invert the image coordinate system and move the image plane at the same distance (f) in front of the lens. Technically i think it is impossible to realize such a camera, but from the mathematical point of view this leads to the same solution. <a class="reference internal" href="#pinhole-cameramodel"><span class="std std-numref">Fig. 2</span></a> shows the simplified model.</p>
+<div class="figure align-center" id="id2">
+<span id="pinhole-cameramodel"></span><img alt="_images/pinhole_camera.png" src="_images/pinhole_camera.png" />
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">simplified camera projection model (this image is based on an illustration from the openCV-Documentation)</span></p>
+</div>
+<p>Now the axes u and v point in the same direction as Xc and Yc. Zc points into the scene. The center of the lens is always the origin of the camera coordinate system. And we have a right sided coordinate system (left sided are used e.g. in geodetic applications).</p>
+<p>Please have a look at the <a class="reference external" href="https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html">Open CV Camera Calibration Documentation</a>
+The following documentation extends the OpenCV Docs or writes the same content in different words.</p>
+</div>
+<div class="section" id="the-pinhole-camera-model">
+<h3>The pinhole camera model<a class="headerlink" href="#the-pinhole-camera-model" title="Permalink to this headline">¶</a></h3>
+<p>The most simple camera model is the pinhole camera. It consists of a light-tight hollow body with a very small pinhole and a lightsensitive film or an image detector. Due to the fact that it has no lens there exists no geometric distortion or blurring of unfocused objects.
+.. The pinhole camera can be used as a first order approximation of the mapping from a 3D scene to the image of a real camera.</p>
+<p>From the mathematical point of view, the pinhole camera is simply a central projection from 3D to a 2D plane. The projection distance is the focal length of the camera.</p>
+<p>With the aid of homogenious coordinates, projective transformations like the central projection are much easier to describe.
+The projection of a 3D point <img class="math" src="_images/math/0494012b7ab56647542b6b83f5eb44a244226d9c.png" alt="\mathbf{X} \in \mathbb{R}^3"/> onto the image plane of a pinhole camera can be described by the equation</p>
+<div class="math">
+<p><img src="_images/math/5ea1a0a9c0a3bfd50f35154a2641e23da81dc39e.png" alt="\mathbf{\bar{x} = P\bar{X}}."/></p>
+</div><p>The 3D point is expressed by the homogenious vector <img class="math" src="_images/math/1fd58a9179775057bdc2df033c2aafa9f5033ee2.png" alt="\mathbf{\bar{X}}=[X,Y,Z,W]^T \in \mathbb{P}^3"/>, while <img class="math" src="_images/math/39f286116e672adc27e77677c84fb6960ace5633.png" alt="X,Y"/> and <img class="math" src="_images/math/bcb2457ac9d8995a4f34d57cadac7ecbbe58f3bd.png" alt="Z"/> are the same as from our real world <img class="math" src="_images/math/0494012b7ab56647542b6b83f5eb44a244226d9c.png" alt="\mathbf{X} \in \mathbb{R}^3"/> and W you can easily set to 1. The resulting image vector <img class="math" src="_images/math/cfdd20ef97136c5bcdc485c7c8d57317a764b9fc.png" alt="\mathbf{\bar{x}}"/> has the projective coordinates <img class="math" src="_images/math/c7fe42352901b7d4d6febc2ca2ca654a26d1ea7c.png" alt="[x,y,w]^T"/>. To get the pixel coordinates <img class="math" src="_images/math/a7c9661486339d11e7f85c0460e446218fb8301c.png" alt="[u,v,1]^T"/> you have to devide <img class="math" src="_images/math/cfdd20ef97136c5bcdc485c7c8d57317a764b9fc.png" alt="\mathbf{\bar{x}}"/> by its third component <img class="math" src="_images/math/ecd1ee2a1cd226b40c37e079aca62398d4b774f5.png" alt="w"/>. <img class="math" src="_images/math/2e1b9128d3c9b8fb56d099ad56863fd3a9137bb9.png" alt="\mathbf{P}"/> is a <img class="math" src="_images/math/87548c10dbc43bcab1be7ccd435f36fdd34d8e06.png" alt="3 \times 4"/> projection matrix with</p>
+<div class="math">
+<p><img src="_images/math/5b17c80c07d30e1e8bf96029427559cd3bf7a97d.png" alt="\mathbf{P = K \big{[} R^T|-R^T T\big{]}}."/></p>
+</div><p>The rotation matrix <img class="math" src="_images/math/41e1f27bd689b391a4833f34f85537ee4e688778.png" alt="\mathbf{R}"/> and the translation vector <img class="math" src="_images/math/096e1e50496439b19d2415f31287c2860461357a.png" alt="\mathbf{T} \in \mathbb{R}^3"/> are the euclidean transformation between the camera and the world coordinate system. We call these parameters the extrinsic camera parameters (or outer orientation). The camera calibration matrix (or inner orientation)</p>
+<div class="math">
+<p><img src="_images/math/82aaf5a142c1c4d9619a520491bbcc1d34a47c48.png" alt="\mathbf{K} = \begin{bmatrix}
+f_x &amp; s_{xy} &amp; c_x \\
+0   &amp; f_y &amp; c_y \\
+0   &amp; 0 &amp; 1
+\end{bmatrix}"/></p>
+</div><p>holds the intrinsic parameters of the camera. <img class="math" src="_images/math/5c8c06c0ca76c7330e23e538490d4509fd693dd7.png" alt="f_x"/> and <img class="math" src="_images/math/e1a948eb6b938d4deedebba09d5f36340bac2dff.png" alt="f_y"/> are the focal distances, with <img class="math" src="_images/math/d0aa221bdb328b7e0183720d7ece7ade44694ded.png" alt="f_y = a_r \cdot f_x"/>. Usually the aspect ratio <img class="math" src="_images/math/3ca80586f44f6dd15adfc405e43a88cf9c0a3c6d.png" alt="a_r"/> is 1. When you now think: how could there be two focal distances for one lens? The answer is: when your detector elements are not quadratic (<img class="math" src="_images/math/ec1662c2e8cc8bb2ae28a60b57e3ac692130b9ac.png" alt="a_r \neq 1"/>), then you can use the dectector element size in x or y direction as unit to measure the focal distance.
+When your focal plane array is sheared you need to set <img class="math" src="_images/math/b7c28860ac140ae1aff69da3190867f6c9cf212d.png" alt="s_{xy}"/> different to 1. The central point of the camera is at <img class="math" src="_images/math/6230637b2aa132e5f5f00a7b0da1cea15f222314.png" alt="[c_x,c_y]^T"/> (in pixels).</p>
+<p>The whole Equation is then:</p>
+<div class="math">
+<p><img src="_images/math/aa8cd469980b8ec074d7559b8c08f2a3f6c69920.png" alt="\begin{bmatrix}
+     x\\
+     y\\
+     w\\
+\end{bmatrix} =
+\begin{bmatrix}
+ f_x &amp; s_{xy} &amp; c_x \\
+ 0   &amp; f_y &amp; c_y \\
+ 0   &amp; 0 &amp; 1
+ \end{bmatrix}
+ \begin{bmatrix}
+ r_{11} &amp; r_{12} &amp; r_{13} &amp; t_{1}\\
+ r_{21} &amp; r_{22} &amp; r_{23} &amp; t_{2}\\
+ r_{31} &amp; r_{32} &amp; r_{33} &amp; t_{3}\\
+ \end{bmatrix}
+ \begin{bmatrix}
+ X\\
+ Y\\
+ Z\\
+ 1
+ \end{bmatrix}"/></p>
+</div><p>The image pixel coordinates (u,v) are</p>
+<div class="math">
+<p><img src="_images/math/ef134839a90b85855e0f6f85d36b3d62df03bb1e.png" alt="u = \frac{x}{w} , \qquad  v = \frac{y}{w}."/></p>
+</div></div>
+<div class="section" id="brown-s-camera-model">
+<h3>Brown’s Camera Model<a class="headerlink" href="#brown-s-camera-model" title="Permalink to this headline">¶</a></h3>
+<p>Until now we have ignored the distortion of the lens, but real camera lenses do have distortion. The brown camera model considers radial and tangential lens distortions.</p>
+<div class="math">
+<p><img src="_images/math/b2db8a148ae6a857f9e1de1f8e7259e6c18faab4.png" alt="r = \sqrt{x^2+y^2}
+
+\hat{x} = x (1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + p_2 (r^2 + 2 x^2) + 2 p_1 x y
+
+\hat{y} = y (1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + p_1 (r^2 + 2 y^2) + 2 p_2 x y
+
+u = c_x + \hat{x} f_x + \hat{y} s_{xy}
+
+v = c_y + \hat{y} f_y"/></p>
+</div></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="camera.html" class="btn btn-neutral" title="Welcome to camera’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Martin Israel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'0.3',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
