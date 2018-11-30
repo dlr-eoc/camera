@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 import numpy as np
 
-__version__ = "0.31"
+__version__ = "0.32"
 
 def homo(mat3d):
     mat4d = np.vstack((mat3d,[0,0,0]))

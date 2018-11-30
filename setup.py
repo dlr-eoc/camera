@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.31'
+version = '0.32'
 
 setup(name='camera',
       version=version,
