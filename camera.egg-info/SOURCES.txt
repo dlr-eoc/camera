@@ -1,9 +1,0 @@
-README.md
-setup.py
-camera/__init__.py
-camera.egg-info/PKG-INFO
-camera.egg-info/SOURCES.txt
-camera.egg-info/dependency_links.txt
-camera.egg-info/entry_points.txt
-camera.egg-info/not-zip-safe
-camera.egg-info/top_level.txt
