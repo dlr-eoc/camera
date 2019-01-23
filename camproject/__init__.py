@@ -1,18 +1,13 @@
 from __future__ import division, print_function
 import numpy as np
+from numpy import sin as s, cos as c
 
-__version__ = "0.32"
+from .utils import *
+from .extrinsics import *
 
-def homo(mat3d):
-    mat4d = np.vstack((mat3d,[0,0,0]))
-    return np.hstack((mat4d,[[0],[0],[0],[1]]))
+__version__ = "0.34"
 
-def projective2euklidean(xh):
-    return (xh / xh[-1, :])[0:-1, :]
-
-def euklidean2projective(xe):
-    return np.vstack((xe, np.ones((1, xe.shape[1]))))
-        
+ 
  
 class CamModel(object):
     NOCAM = 0
@@ -53,11 +48,7 @@ class Camera(object):
     S = np.eye(4) # transformationsmatrix
     def __init__(self):
         """
-        standalone means the camera is not mounted on a uav. 
-        the coordinate system is then the camera coordinate system (x points right, y points down on the image and z points to the scene)
-        if standalone is false we assume that the camera is mounted on a uav
-        and the coordinate system is the uav-coordinate system (the geocoordinate system / left handed, see pose for more details)
-                 
+         the camera coordinate system is RDF (right,down, front). x points right, y points down on the image and z points to the scene.
             
                _z  right handed camera cosy  
                /|
@@ -85,7 +76,7 @@ class Camera(object):
            :return: the position of the camera in world coordinates 
            :rtype: 3D numpy Array 
         """
-        return self.S[0:3,[3]].ravel()
+        return self.Si.dot(np.array([[0],[0],[0],[1]])) #self.S[0:3,[3]].ravel()
             
     #def transform(self):
     #    self.S = self.cosymat.dot(self.R_boresight).dot(self.T_boresight).dot(self.R_gimbal).dot(self.T_gimbal).dot(self.R_uav).dot(self.T_uav)
@@ -135,7 +126,12 @@ class Camera(object):
                 [0,1.0/self.fy,-float(self.cy)/self.fx,0],[0,0,1,0],[0,0,0,1]])    
     
 
-        
+    def visible(self,X):
+        if 0<X[0]<self.imgwidth and 0<X[1]<self.imgheight:  
+            return True
+        else:
+            return False
+            
     def project(self,X):
         """
         projects a world 3d-point on the camera plane

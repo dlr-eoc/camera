@@ -23,3 +23,6 @@ camproject.egg-info/PKG-INFO
 camproject.egg-info/requires.txt
 camproject.egg-info/SOURCES.txt
 camproject.egg-info/top_level.txt
+dist/camproject-0.34-py3.6.egg
+build/lib/camproject/utils.py
+build/lib/camproject/extrinsics.py
