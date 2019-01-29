@@ -5,7 +5,7 @@ from numpy import sin as s, cos as c
 from .utils import *
 from .extrinsics import *
 
-__version__ = "0.34"
+__version__ = "0.36"
 
  
  
@@ -163,8 +163,11 @@ class Camera(object):
             Xi = self.Si.dot(xt)
             return Xi.T 
         elif self.distortionmodel == CamModel.PINHOLE:
+            #print("xt",xt)
             X3d = np.array([xt[0],xt[1],np.ones_like(xt[0]),np.ones_like(xt[0])])
+            #print("X3d",X3d)
             Xi = self.Si.dot(self.__Kinv__()).dot(self.Pi).dot(X3d)
+            #print("Xi",Xi)
             return (Xi/Xi[3]).T
             
         elif self.distortionmodel == CamModel.BROWN:
