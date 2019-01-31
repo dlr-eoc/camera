@@ -37,7 +37,7 @@ class Extrinsics(object):
         self.params = {"pose":{},"gimbal":{},"camera_boresight":{},"uav_boresight":{},"cosytransform":{}}
     
         
-    def setPose(self,roll=0,pitch=0,yaw=0,X=0,Y=0,Z=0,order="ZYX"): 
+    def setPose(self,X=0,Y=0,Z=0,roll=0,pitch=0,yaw=0,order="ZYX"): 
         '''
         X,Y and Z are in NEU frame reference (positive geo coordinates), roll, pitch and yaw are in FRD frame reference.
         
