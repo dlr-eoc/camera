@@ -5,7 +5,7 @@ from numpy import sin as s, cos as c
 from .utils import *
 from .extrinsics import *
 
-__version__ = "0.36"
+__version__ = "0.37"
 
  
  
@@ -193,14 +193,14 @@ class Camera(object):
         if self.distortionmodel == CamModel.NOCAM:
             raise("Error- with NOCAM this method doeas not work!")
         rp = self.reproject(x)
-        raydir = np.add(rp.T[0:3].T, - self.position()).T
+        raydir = np.add(rp.T[0:3].T, - self.position().ravel()[0:3]).T
         n_plane = np.array([0,0,-1])
         plane = n_plane * (- distance)
         rd_n = np.dot(raydir.T, n_plane)
         pd = np.dot(plane, n_plane)
-        p0_n = np.dot(self.position(), n_plane)
+        p0_n = np.dot(self.position().ravel()[0:3], n_plane)
         t = (pd - p0_n) / np.ma.masked_where(rd_n >= 0, rd_n)
-        return np.add(self.position(), (raydir * t).T)
+        return np.add(self.position().ravel()[0:3], (raydir * t).T)
         
            
 #

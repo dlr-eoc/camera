@@ -1,0 +1,11 @@
+Befehle für das Update auf pypi:
+
+#erst alte Files in Dist löschen
+...
+# erzeugen eines neuen Wheels:
+python setup.py sdist bdist_wheel
+# upload auf pypi
+python -m twine upload dist/*
+#hier wird user und passwort abgefragt.
+
+
