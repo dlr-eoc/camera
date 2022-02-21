@@ -1,9 +1,13 @@
 # camproject
 a python module for camera projection and reprojection
 
+this repository will no longer be maintained.
+
+Please use the newer version of this module from https://github.com/EasyIsrael/camproject
+
 Maintainer
 ----------
-  * Martin Israel <martin.israel@dlr.de>
+  * Martin Israel <m.israel@thermaldrones.de>
   
 Requirements
 ------------
