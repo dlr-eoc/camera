@@ -46,7 +46,7 @@ to reproject it back to the 3D world we use this code
 Documentation
 -------------
 
-* documentation can be found at https://martin-israel.de/doc/camera
+* documentation can be found at https://camproject.readthedocs.io/en/latest/
 * If you acquired this code via GitHub, then you can build the documentation using sphinx.
       From the documentation directory, run:
           `$ make html`
